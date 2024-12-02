@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Features.Common.Infrastructure;
 
-public class GridwiseDbContext(DbContextOptions<GridwiseDbContext> options, IMediator mediator) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options, IMediator mediator) : DbContext(options)
 {
     public DbSet<Customer> Customers { get; set; }
     public DbSet<WorkOrder> WorkOrders { get; set; }
@@ -14,7 +14,7 @@ public class GridwiseDbContext(DbContextOptions<GridwiseDbContext> options, IMed
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(GridwiseDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

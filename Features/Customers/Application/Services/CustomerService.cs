@@ -3,7 +3,7 @@ using Features.Customers.Domain;
 
 namespace Features.Customers.Application.Services;
 
-public class CustomerService(GridwiseDbContext db) : ICustomerService
+public class CustomerService(AppDbContext db) : ICustomerService
 {
     public async Task<Guid> CreateAsync(CustomerModel model)
     {

@@ -18,7 +18,7 @@ public static class ServiceCollectionExtension
 
     public static IServiceCollection AddPostgreSQL(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<GridwiseDbContext>(opt =>
+        services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseNpgsql(connectionString, m => { m.MigrationsAssembly("Migrations"); });
         });

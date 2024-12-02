@@ -3,7 +3,7 @@ using Features.WorkOrders.Domain;
 
 namespace Features.WorkOrders.Application;
 
-public class WorkOrderService(GridwiseDbContext db) : IWorkOrderService
+public class WorkOrderService(AppDbContext db) : IWorkOrderService
 {
     public async Task<Guid> CreateAsync(WorkOrderModel model)
     {
