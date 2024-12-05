@@ -1,5 +1,4 @@
 using Features.Customers.Domain;
-using Features.WorkOrders.Domain;
 using MediatR;
 
 namespace Features.Common.Infrastructure;
@@ -7,9 +6,6 @@ namespace Features.Common.Infrastructure;
 public class AppDbContext(DbContextOptions<AppDbContext> options, IMediator mediator) : DbContext(options)
 {
     public DbSet<Customer> Customers { get; set; }
-    public DbSet<WorkOrder> WorkOrders { get; set; }
-    public DbSet<WorkOrderTask> WorkOrderTasks { get; set; }
-    public DbSet<WorkOrderTaskType> WorkOrderTaskTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

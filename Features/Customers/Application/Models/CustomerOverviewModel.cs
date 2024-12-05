@@ -1,6 +1,6 @@
 namespace Features.Customers.Application.Models;
 
-public class CustomerModel
+public class CustomerOverviewModel
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }

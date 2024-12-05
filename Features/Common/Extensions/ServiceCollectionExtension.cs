@@ -1,5 +1,4 @@
 using Features.Customers.Application.Services;
-using Features.WorkOrders.Application;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Features.Common.Extensions;
@@ -12,7 +11,6 @@ public static class ServiceCollectionExtension
     {
         services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(IFeatureMarker).Assembly));
         services.AddScoped<ICustomerService, CustomerService>();
-        services.AddScoped<IWorkOrderService, WorkOrderService>();
         return services;
     }
 
@@ -21,6 +19,16 @@ public static class ServiceCollectionExtension
         services.AddDbContext<AppDbContext>(opt =>
         {
             opt.UseNpgsql(connectionString, m => { m.MigrationsAssembly("Migrations"); });
+        });
+
+        return services;
+    }
+    
+    public static IServiceCollection AddSQLServer(this IServiceCollection services, string connectionString)
+    {
+        services.AddDbContext<AppDbContext>(opt =>
+        {
+            opt.UseSqlServer(connectionString, m => { m.MigrationsAssembly("Migrations"); });
         });
 
         return services;

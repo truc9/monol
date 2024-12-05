@@ -1,9 +1,10 @@
-using API.Endpoints;
+using FastEndpoints;
+using FastEndpoints.Swagger;
+using Features.Common.Extensions;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using Features.Common.Extensions;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -17,6 +18,8 @@ Log.Logger = new LoggerConfiguration()
 const string CORS_POLICY = "GRIDWISE_CORS_POLICY";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddFastEndpoints().SwaggerDocument();
 
 builder.Services.AddOpenApi();
 
@@ -37,7 +40,8 @@ builder.Services.AddLogging(b => b.AddSerilog(dispose: true));
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddBusinessServices();
-builder.Services.AddPostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL")!);
+// builder.Services.AddPostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL")!);
+builder.Services.AddSQLServer(builder.Configuration.GetConnectionString("SQLServer")!);
 
 var app = builder.Build();
 
@@ -54,8 +58,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-// Map endpoints
-app.UseCustomerEndpoints();
-app.UseWorkOrderEndpoints();
+app.UseFastEndpoints(c => { c.Endpoints.RoutePrefix = "api"; }).UseSwaggerGen().UseSwaggerUi();
 
 app.Run();
