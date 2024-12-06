@@ -1,3 +1,4 @@
+using Features.Common.Infrastructure.Interceptors;
 using Features.Customers.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,19 +17,27 @@ public static class ServiceCollectionExtension
 
     public static IServiceCollection AddPostgreSQL(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<AppDbContext>(opt =>
+        services.AddDbContext<AppDbContext>((sp, opt) =>
         {
             opt.UseNpgsql(connectionString, m => { m.MigrationsAssembly("Migrations"); });
+            opt.AddInterceptors(
+                sp.GetRequiredService<AuditSaveChangeInterceptor>(),
+                sp.GetRequiredService<PublishEventSaveChangeInterceptor>()
+            );
         });
 
         return services;
     }
-    
+
     public static IServiceCollection AddSQLServer(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<AppDbContext>(opt =>
+        services.AddDbContext<AppDbContext>((sp, opt) =>
         {
             opt.UseSqlServer(connectionString, m => { m.MigrationsAssembly("Migrations"); });
+            opt.AddInterceptors(
+                sp.GetRequiredService<AuditSaveChangeInterceptor>(),
+                sp.GetRequiredService<PublishEventSaveChangeInterceptor>()
+            );
         });
 
         return services;

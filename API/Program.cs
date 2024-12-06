@@ -61,3 +61,7 @@ app.UseAuthorization();
 app.UseFastEndpoints(c => { c.Endpoints.RoutePrefix = "api"; }).UseSwaggerGen().UseSwaggerUi();
 
 app.Run();
+
+public partial class Program
+{
+}
