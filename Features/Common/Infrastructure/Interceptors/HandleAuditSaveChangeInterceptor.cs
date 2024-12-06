@@ -2,14 +2,17 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Features.Common.Infrastructure.Interceptors;
 
-public class AuditSaveChangeInterceptor : SaveChangesInterceptor
+public class HandleAuditSaveChangeInterceptor : SaveChangesInterceptor
 {
-    public override ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result,
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+        InterceptionResult<int> result,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var dbContext = eventData.Context!;
-        foreach (var entry in dbContext.ChangeTracker.Entries()
-                     .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
+        var entries = eventData.Context!.ChangeTracker
+            .Entries<Entity>()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
         {
             if (entry.Entity is Entity auditable)
             {
@@ -28,6 +31,6 @@ public class AuditSaveChangeInterceptor : SaveChangesInterceptor
             }
         }
 
-        return base.SavedChangesAsync(eventData, result, cancellationToken);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 }

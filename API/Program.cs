@@ -39,7 +39,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddLogging(b => b.AddSerilog(dispose: true));
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
-builder.Services.AddBusinessServices();
+builder.Services.AddFeatures();
 // builder.Services.AddPostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL")!);
 builder.Services.AddSQLServer(builder.Configuration.GetConnectionString("SQLServer")!);
 

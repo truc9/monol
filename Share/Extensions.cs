@@ -7,13 +7,13 @@ public static class Extensions
 {
     public static async Task PublishEventAsync(this IMediator mediator, DbContext db, CancellationToken cts = default)
     {
-        var query = db.ChangeTracker
+        var entries = db.ChangeTracker
             .Entries<Entity>()
             .Where(x => x.Entity.Events.Any());
 
-        if (query.Any())
+        if (entries.Any())
         {
-            var events = query.SelectMany(x => x.Entity.Events).ToList();
+            var events = entries.SelectMany(x => x.Entity.Events).ToList();
 
             if (events.Any())
             {
@@ -23,7 +23,7 @@ public static class Extensions
                 }
             }
 
-            query.ToList().ForEach(e => e.Entity.ClearEvents());    
+            entries.ToList().ForEach(e => e.Entity.ClearEvents());
         }
     }
 }

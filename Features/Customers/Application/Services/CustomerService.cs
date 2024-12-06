@@ -1,5 +1,6 @@
 using Features.Customers.Application.Models;
 using Features.Customers.Domain;
+using Features.Customers.Domain.Events;
 
 namespace Features.Customers.Application.Services;
 
@@ -15,6 +16,13 @@ public class CustomerService(AppDbContext db) : ICustomerService
             Email = overviewModel.Email,
             Phone = overviewModel.Phone,
         };
+
+        customer.AddEvent(new CustomerCreatedEvent
+        {
+            Id = customer.Id,
+            Name = $"{customer.FirstName} {customer.LastName}"
+        });
+
         db.Customers.Add(customer);
         await db.SaveChangesAsync(ct);
         return customer.Id;
@@ -26,10 +34,18 @@ public class CustomerService(AppDbContext db) : ICustomerService
         var customer = await db.Customers.FindAsync(id, ct);
         if (customer is null) throw new DomainException($"Customer {id} not found");
 
+        customer.AddEvent(new CustomerUpdatedEvent
+        {
+            Id = customer.Id,
+            OldName = $"{customer.FirstName} {customer.LastName}",
+            NewName = $"{overviewModel.FirstName} {overviewModel.LastName}",
+        });
+
         customer.FirstName = overviewModel.FirstName;
         customer.LastName = overviewModel.LastName;
         customer.Email = overviewModel.Email;
         customer.Phone = overviewModel.Phone;
+        
         await db.SaveChangesAsync(ct);
     }
 
@@ -63,6 +79,12 @@ public class CustomerService(AppDbContext db) : ICustomerService
             .FirstOrDefaultAsync(ct);
     }
 
-    public async Task DeleteAsync(Guid customerId, CancellationToken ct = default) =>
-        await db.Customers.Where(c => c.Id == customerId).ExecuteDeleteAsync(ct);
+    public async Task DeleteAsync(Guid customerId, CancellationToken ct = default)
+    {
+        var customer = await db.Customers.FindAsync(customerId, ct);
+        if (customer is null) throw new DomainException($"Customer {customerId} not found");
+        db.Customers.Remove(customer);
+        await db.SaveChangesAsync(ct);
+        customer.AddEvent(new CustomerDeletedEvent { Id = customer.Id });
+    }
 }
