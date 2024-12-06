@@ -7,7 +7,7 @@
 🚧 Ready to use with domain events, exception handling, caching, logging
 
 ## Why ?
-Tired of different layers for Service, Repository, Unit of Work blablabla
+Fed up with managing separate layers for services, repositories, and units of work. Often, the database provider remains constant, but customer requirements tend to evolve.
 
 ## What ?
-Looks like Vertical slice ? Yes it is, but not strictly 100% follow vertical slice (as this share presentation layer)
+While this structure adopts a vertical slice approach, it doesn't strictly adhere to it, as it includes a shared presentation layer.
