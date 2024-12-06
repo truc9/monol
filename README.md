@@ -1,4 +1,6 @@
 # monol
+> Focus on fulfilling software requirements directly, rather than overengineering abstractions.
+
 🐠 Personal ASP.NET Core Monolith Project Structure
 
 ## Goal
