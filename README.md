@@ -1,7 +1,7 @@
 # monol
 > Focus on fulfilling software requirements directly, rather than overengineering abstractions.
 
-🐠 Personal ASP.NET Core Monolith Project Structure
+🐠 ASP.NET Core Vertical Slice-ish
 
 ## Goal
 ✅ Define a ready to use monolith template\
